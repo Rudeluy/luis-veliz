@@ -4,7 +4,7 @@ export function About() {
   return (
     <section
       id="about"
-      className="py-32 bg-gradient-to-br from-black via-dark to-darker scroll-mt-24"
+      className="relative z-10 py-32 bg-gradient-to-br from-black via-dark to-darker scroll-mt-24"
     >
       <div className="max-w-6xl mx-auto px-6 md:px-12 grid md:grid-cols-2 gap-16 items-center">
         {/* 🔹 Imagen lateral con animación */}
@@ -17,7 +17,7 @@ export function About() {
         >
           <div className="relative">
             <img
-              src="/profile.png"
+              src={`${process.env.PUBLIC_URL}/profile.png`} 
               alt="Luis Veliz"
               className="w-72 md:w-80 rounded-2xl border-4 border-indigo-200 shadow-[0_0_30px_rgba(191,219,254,0.3)]"
             />

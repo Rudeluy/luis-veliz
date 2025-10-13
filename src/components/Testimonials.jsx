@@ -17,7 +17,7 @@ export function Testimonials() {
   return (
     <section
       id="testimonials"
-      className="bg-transparent py-24 px-6 md:px-16 backdrop-blur-md"
+      className="bg-transparent py-24 px-6 md:px-16"
     >
       <div className="max-w-6xl mx-auto text-center">
         <h2 className="text-4xl font-bold text-amber-300 mb-12">Testimonios</h2>

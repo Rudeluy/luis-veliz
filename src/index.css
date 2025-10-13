@@ -6,6 +6,7 @@
 /* 🌐 Fuente global */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 
+
 /* 🎨 Estilos base */
 html {
   scroll-behavior: smooth;
@@ -17,6 +18,7 @@ body {
   background-color: #0f0f1a;
   color: white;
   overflow-x: hidden;
+  scroll-padding-top: 6rem; /* equivale a 96px */
 }
 
 /* ✨ Títulos */
@@ -29,11 +31,18 @@ h2 {
 }
 
 /* 📱 Secciones generales */
+/*
 section {
   padding-top: 6rem;
   padding-bottom: 6rem;
   transition: all 0.6s ease-in-out;
-  scroll-margin-top: 100px; /* compensa el navbar fijo */
+  scroll-margin-top: 100px;
+}
+*/
+
+/* Después: sin padding global; deja solo un transition si quieres */
+section {
+  transition: all 0.6s ease-in-out;
 }
 
 /* 🎆 Efecto glassmorphism para nav y secciones con fondos translúcidos */
@@ -91,7 +100,8 @@ a:hover {
 header, nav, .glass {
   all: revert-layer;
 }
-
+/* altura consistente del navbar */
+header { height: 80px; } /* h-20 */
 
 /* ✅ Asegura que el body sea transparente y permita ver el canvas */
 html, #root {
@@ -106,4 +116,7 @@ body {
   background-attachment: fixed;
   color: white;
   overflow-x: hidden;
+}
+section:last-of-type {
+  padding-bottom: 10rem; /* o más si usas efectos visuales */
 }

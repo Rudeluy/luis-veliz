@@ -4,7 +4,7 @@ export function Hero() {
   return (
     <section
       id="home"
-      className="min-h-screen flex flex-col justify-center items-center text-center relative overflow-hidden bg-gradient-to-br from-darker via-dark to-black scroll-mt-24"
+      className="h-screen flex flex-col justify-center items-center text-center bg-gradient-to-br from-dark via-black to-darker scroll-mt-24"
     >
       {/* 🔹 Círculo decorativo difuminado detrás del texto */}
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-96 h-96 bg-amber-500/20 rounded-full blur-3xl"></div>
@@ -31,7 +31,7 @@ export function Hero() {
           transition={{ delay: 0.4, duration: 1 }}
           className="text-5xl md:text-6xl font-bold text-white mb-6 leading-tight"
         >
-          Luis Alfredo Véliz Sánchez
+          Luis Véliz S.
         </motion.h1>
 
         <motion.p

@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
-import { FaGithub, FaLinkedin } from "react-icons/fa";
+import { FaGithub, FaLinkedin, FaBars, FaTimes } from "react-icons/fa";
+import { motion, AnimatePresence } from "framer-motion";
 
 export function Navbar() {
   const [active, setActive] = useState("home");
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
-  // Detectar la sección activa y el scroll para cambiar fondo
+  // Detectar scroll y sección activa
   useEffect(() => {
     const handleScroll = () => {
       const sections = document.querySelectorAll("section[id]");
@@ -21,12 +23,26 @@ export function Navbar() {
         }
       });
       setActive(current);
-      setScrolled(window.scrollY > 80); // activa fondo al hacer scroll
+      setScrolled(window.scrollY > 80);
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // 🔹 Nuevo método: scroll preciso compensando el header fijo
+  const scrollToSection = (id) => {
+    const section = document.getElementById(id);
+    if (section) {
+      const offset = section.offsetTop - 90; // Ajusta según la altura real del navbar
+      window.scrollTo({
+        top: offset,
+        behavior: "smooth",
+      });
+      setActive(id);
+      setMenuOpen(false);
+    }
+  };
 
   return (
     <header
@@ -42,8 +58,8 @@ export function Navbar() {
           Luis Veliz
         </h1>
 
-        {/* Menú principal */}
-        <ul className="hidden md:flex gap-10 bg-black/30 px-10 py-3 rounded-2xl items-center border border-gray-700 backdrop-blur-md shadow-[0_0_15px_rgba(191,219,254,0.15)]">
+        {/* Menú principal (desktop) */}
+        <ul className="hidden md:flex gap-10 bg-black/30 px-10 py-3 rounded-2xl items-center border border-gray-700 backdrop-blur-md shadow-[0_0_15px_rgba(255,255,255,0.1)]">
           {[
             { id: "home", label: "INICIO" },
             { id: "about", label: "SOBRE MÍ" },
@@ -52,8 +68,8 @@ export function Navbar() {
             { id: "contact", label: "CONTACTO" },
           ].map((link) => (
             <li key={link.id}>
-              <a
-                href={`#${link.id}`}
+              <button
+                onClick={() => scrollToSection(link.id)}
                 className={`text-sm font-semibold tracking-widest uppercase transition-all duration-300 ${
                   active === link.id
                     ? "text-amber-300 drop-shadow-[0_0_6px_rgba(255,195,0,0.8)]"
@@ -61,7 +77,7 @@ export function Navbar() {
                 }`}
               >
                 {link.label}
-              </a>
+              </button>
             </li>
           ))}
         </ul>
@@ -87,10 +103,80 @@ export function Navbar() {
         </div>
 
         {/* Ícono menú móvil */}
-        <div className="md:hidden text-gray-300 text-2xl cursor-pointer">
-          ☰
-        </div>
+        <button
+          className="md:hidden text-gray-300 text-3xl focus:outline-none"
+          onClick={() => setMenuOpen(!menuOpen)}
+          aria-label="Abrir menú"
+        >
+          {menuOpen ? <FaTimes /> : <FaBars />}
+        </button>
       </nav>
+
+      {/* 🔹 Menú desplegable móvil */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -30 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -30 }}
+            transition={{ duration: 0.4 }}
+            className="md:hidden absolute top-20 left-0 w-full bg-black/90 backdrop-blur-md border-t border-gray-800 py-10 z-40"
+          >
+            <ul className="flex flex-col items-center gap-8 text-lg">
+              {[
+                { id: "home", label: "INICIO" },
+                { id: "about", label: "SOBRE MÍ" },
+                { id: "skills", label: "HABILIDADES" },
+                { id: "projects", label: "PROYECTOS" },
+                { id: "contact", label: "CONTACTO" },
+              ].map((link, i) => (
+                <motion.li
+                  key={link.id}
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.15 * i, duration: 0.4 }}
+                >
+                  <button
+                    onClick={() => scrollToSection(link.id)}
+                    className={`font-semibold tracking-wide transition-all duration-300 ${
+                      active === link.id
+                        ? "text-amber-300"
+                        : "text-gray-300 hover:text-amber-300"
+                    }`}
+                  >
+                    {link.label}
+                  </button>
+                </motion.li>
+              ))}
+
+              {/* Redes sociales también con fade */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.9, duration: 0.4 }}
+                className="flex gap-6 mt-6"
+              >
+                <a
+                  href="https://github.com/Rudeluy"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-gray-300 hover:text-white transition"
+                >
+                  <FaGithub size={24} />
+                </a>
+                <a
+                  href="https://www.linkedin.com/in/luis-alfredo-veliz/"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-gray-300 hover:text-white transition"
+                >
+                  <FaLinkedin size={24} />
+                </a>
+              </motion.div>
+            </ul>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }

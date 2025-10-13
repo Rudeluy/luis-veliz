@@ -5,7 +5,7 @@ export function Contact() {
   return (
     <section
       id="contact"
-      className="py-32 bg-gradient-to-br from-dark via-black to-darker scroll-mt-24"
+      className="relative z-10 min-h-screen flex flex-col justify-center items-center py-24 pb-40 scroll-mt-24"
     >
       <div className="max-w-4xl mx-auto px-6 md:px-12 text-center">
         {/* Título */}

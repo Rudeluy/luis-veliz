@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/Portafolio-luis-veliz/static/css/main.e1451471.css",
-    "main.js": "/Portafolio-luis-veliz/static/js/main.200a1d95.js",
+    "main.css": "/Portafolio-luis-veliz/static/css/main.03939a36.css",
+    "main.js": "/Portafolio-luis-veliz/static/js/main.aa2e17e4.js",
     "index.html": "/Portafolio-luis-veliz/index.html",
-    "main.e1451471.css.map": "/Portafolio-luis-veliz/static/css/main.e1451471.css.map",
-    "main.200a1d95.js.map": "/Portafolio-luis-veliz/static/js/main.200a1d95.js.map"
+    "main.03939a36.css.map": "/Portafolio-luis-veliz/static/css/main.03939a36.css.map",
+    "main.aa2e17e4.js.map": "/Portafolio-luis-veliz/static/js/main.aa2e17e4.js.map"
   },
   "entrypoints": [
-    "static/css/main.e1451471.css",
-    "static/js/main.200a1d95.js"
+    "static/css/main.03939a36.css",
+    "static/js/main.aa2e17e4.js"
   ]
 }

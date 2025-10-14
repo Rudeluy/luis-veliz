@@ -363,7 +363,7 @@
   }
 }
 /* ================================
-   LINK A CÓDIGO FUENTE
+   LINK A CÓDIGO FUENTE (mejorado)
 ================================ */
 .ml-code-link {
   display: inline-flex;
@@ -372,7 +372,8 @@
   gap: 8px;
   color: #00b4d8;
   font-weight: 600;
-  margin-top: 1.2rem;
+  margin-top: 1.5rem; /* más espacio desde el botón */
+  margin-left: 0.5rem; /* leve separación lateral */
   text-decoration: none;
   transition: all 0.3s ease;
   font-size: 0.95rem;
@@ -391,4 +392,9 @@
 
 .ml-code-link:hover .ml-code-icon {
   transform: rotate(-10deg);
+}
+
+/* Si deseas que se vea un poco más separado del botón “Ver más” */
+.ml-card .ml-btn {
+  margin-bottom: 0.5rem; /* añade espacio entre los dos elementos */
 }

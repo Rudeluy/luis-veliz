@@ -190,7 +190,7 @@ export function MachineLearning() {
                 setActiveProject(activeProject === project.id ? null : project.id)
               }
             >
-              {activeProject === project.id ? "Cerrar" : "Ver más"}
+              {activeProject === project.id ? "Cerrar" : "Probar Modelo"}
             </button>
 
             {/* 🔹 Enlace al repositorio */}

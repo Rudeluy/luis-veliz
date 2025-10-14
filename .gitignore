@@ -1,0 +1,8 @@
+# Ignorar dependencias y cachés
+node_modules/
+dist/
+build/
+.cache/
+.vscode/
+.DS_Store
+.env

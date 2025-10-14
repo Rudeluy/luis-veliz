@@ -35,6 +35,9 @@ function App() {
         <section id="projects">
           <Projects />
         </section>
+        <section id="machine-learning">
+        <MachineLearning />
+        </section>
         <section id="testimonials">
           <Testimonials />
         </section>
@@ -42,9 +45,7 @@ function App() {
           <Contact />
         </section>
       </main>
-      <section id="machine-learning">
-        <MachineLearning />
-      </section>
+      
 
       <Footer />
     </div>

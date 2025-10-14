@@ -326,3 +326,39 @@
   color: #ddd;
   line-height: 1.4;
 }
+/* ================================
+   AJUSTES PARA FORMULARIOS EXTENDIDOS
+================================ */
+
+/* Permite scroll suave dentro del contenedor del formulario largo */
+.ml-form-container {
+  max-height: 80vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #00b4d8 #1c1c1c;
+}
+
+/* Personalización del scrollbar (Chrome/Edge) */
+.ml-form-container::-webkit-scrollbar {
+  width: 8px;
+}
+.ml-form-container::-webkit-scrollbar-thumb {
+  background-color: #00b4d8;
+  border-radius: 6px;
+}
+.ml-form-container::-webkit-scrollbar-track {
+  background-color: #1c1c1c;
+}
+
+/* Añade un espaciado sutil entre los labels para que no se saturen visualmente */
+.ml-form label {
+  margin-bottom: 0.8rem;
+}
+
+/* Para pantallas pequeñas, evita que los inputs se amontonen */
+@media (max-width: 600px) {
+  .ml-form {
+    max-height: none;
+    padding: 1.5rem 1rem;
+  }
+}

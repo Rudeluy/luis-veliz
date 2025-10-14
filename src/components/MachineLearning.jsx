@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./MachineLearning.css";
+import { FaCode } from "react-icons/fa";
 
 export function MachineLearning() {
   const [activeProject, setActiveProject] = useState(null);
@@ -39,6 +40,7 @@ export function MachineLearning() {
       description:
         "Modelo predictivo que estima el nivel de riesgo de diabetes según indicadores de salud.",
       endpoint: "https://pdiabetes-backend.onrender.com/predict",
+      repo: "https://github.com/Rudeluy/pdiabetes-backend",
     },
     {
       id: 2,
@@ -46,6 +48,7 @@ export function MachineLearning() {
       description:
         "Modelo que determina la calidad de vinos a partir de características químicas.",
       endpoint: "#",
+      repo: "https://github.com/Rudeluy/proyecto-vinos",
     },
     {
       id: 3,
@@ -53,6 +56,7 @@ export function MachineLearning() {
       description:
         "Modelo NLP que identifica emociones positivas o negativas en texto.",
       endpoint: "#",
+      repo: "https://github.com/Rudeluy/psentimientos-backend",
     },
   ];
 
@@ -189,7 +193,19 @@ export function MachineLearning() {
               {activeProject === project.id ? "Cerrar" : "Ver más"}
             </button>
 
-            {/* 🔹 Solo el proyecto 1 tiene formulario funcional */}
+            {/* 🔹 Enlace al repositorio */}
+            {project.repo && (
+              <a
+                href={project.repo}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ml-code-link"
+              >
+                <FaCode className="ml-code-icon" /> Ver código aquí
+              </a>
+            )}
+
+            {/* 🔹 Formulario o aviso "próximamente" */}
             {activeProject === project.id && (
               <div className="ml-form-container">
                 {project.id === 1 ? (

@@ -362,3 +362,33 @@
     padding: 1.5rem 1rem;
   }
 }
+/* ================================
+   LINK A CÓDIGO FUENTE
+================================ */
+.ml-code-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #00b4d8;
+  font-weight: 600;
+  margin-top: 1.2rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+}
+
+.ml-code-link:hover {
+  color: #0096c7;
+  text-shadow: 0 0 8px rgba(0, 180, 216, 0.8);
+  transform: scale(1.03);
+}
+
+.ml-code-icon {
+  font-size: 1.1rem;
+  transition: transform 0.3s ease;
+}
+
+.ml-code-link:hover .ml-code-icon {
+  transform: rotate(-10deg);
+}

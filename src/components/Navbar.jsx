@@ -30,11 +30,11 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // 🔹 Nuevo método: scroll preciso compensando el header fijo
+  // Scroll preciso compensando el header fijo
   const scrollToSection = (id) => {
     const section = document.getElementById(id);
     if (section) {
-      const offset = section.offsetTop - 90; // Ajusta según la altura real del navbar
+      const offset = section.offsetTop - 90; // Ajusta según la altura del navbar
       window.scrollTo({
         top: offset,
         behavior: "smooth",
@@ -43,6 +43,16 @@ export function Navbar() {
       setMenuOpen(false);
     }
   };
+
+  // 🔹 Enlaces del menú principal
+  const links = [
+    { id: "home", label: "INICIO" },
+    { id: "about", label: "SOBRE MÍ" },
+    { id: "skills", label: "HABILIDADES" },
+    { id: "projects", label: "PROYECTOS" },
+    { id: "machine-learning", label: "MACHINE LEARNING" }, // ✅ Nuevo enlace
+    { id: "contact", label: "CONTACTO" },
+  ];
 
   return (
     <header
@@ -60,13 +70,7 @@ export function Navbar() {
 
         {/* Menú principal (desktop) */}
         <ul className="hidden md:flex gap-10 bg-black/30 px-10 py-3 rounded-2xl items-center border border-gray-700 backdrop-blur-md shadow-[0_0_15px_rgba(255,255,255,0.1)]">
-          {[
-            { id: "home", label: "INICIO" },
-            { id: "about", label: "SOBRE MÍ" },
-            { id: "skills", label: "HABILIDADES" },
-            { id: "projects", label: "PROYECTOS" },
-            { id: "contact", label: "CONTACTO" },
-          ].map((link) => (
+          {links.map((link) => (
             <li key={link.id}>
               <button
                 onClick={() => scrollToSection(link.id)}
@@ -123,13 +127,7 @@ export function Navbar() {
             className="md:hidden absolute top-20 left-0 w-full bg-black/90 backdrop-blur-md border-t border-gray-800 py-10 z-40"
           >
             <ul className="flex flex-col items-center gap-8 text-lg">
-              {[
-                { id: "home", label: "INICIO" },
-                { id: "about", label: "SOBRE MÍ" },
-                { id: "skills", label: "HABILIDADES" },
-                { id: "projects", label: "PROYECTOS" },
-                { id: "contact", label: "CONTACTO" },
-              ].map((link, i) => (
+              {links.map((link, i) => (
                 <motion.li
                   key={link.id}
                   initial={{ opacity: 0, y: 15 }}
@@ -149,7 +147,7 @@ export function Navbar() {
                 </motion.li>
               ))}
 
-              {/* Redes sociales también con fade */}
+              {/* Redes sociales (móvil) */}
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}

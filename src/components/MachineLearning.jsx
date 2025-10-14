@@ -26,13 +26,14 @@ export function MachineLearning() {
     Age: "",
     Education: "",
     Income: "",
+    text: "", // 🔹 campo para análisis de sentimientos
   });
 
   const [errors, setErrors] = useState({});
   const [prediction, setPrediction] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // 🔹 Todos los proyectos (restaurados)
+  // 🔹 Proyectos activos
   const projects = [
     {
       id: 1,
@@ -55,12 +56,12 @@ export function MachineLearning() {
       title: "Análisis de Sentimientos",
       description:
         "Modelo NLP que identifica emociones positivas o negativas en texto.",
-      endpoint: "#",
+      endpoint: "https://psentimientos-backend.onrender.com/predict",
       repo: "https://github.com/Rudeluy/psentimientos-backend",
     },
   ];
 
-  // ✅ Rangos de valores aceptables
+  // ✅ Rangos válidos para diabetes
   const ranges = {
     BMI: { min: 10, max: 70, text: "IMC entre 10 y 70" },
     GenHlth: {
@@ -94,19 +95,28 @@ export function MachineLearning() {
       "Sex",
     ];
 
+    // 🔹 Validación binaria
     if (binaryFields.includes(name)) {
-      if (value !== "0" && value !== "1") {
-        return "Debe seleccionar 0 (No) o 1 (Sí)";
-      }
+      if (value !== "0" && value !== "1") return "Debe seleccionar 0 (No) o 1 (Sí)";
       return "";
     }
 
+    // 🔹 Validación de rangos
     if (ranges[name]) {
       if (value === "") return "Campo obligatorio.";
       if (isNaN(value)) return "Debe ingresar un número.";
-      if (value < ranges[name].min || value > ranges[name].max) {
+      if (value < ranges[name].min || value > ranges[name].max)
         return `Debe estar entre ${ranges[name].min} y ${ranges[name].max}.`;
-      }
+    }
+
+    // 🔹 Validación de texto (modelo de sentimientos)
+    if (name === "text") {
+      if (!value.trim()) return "Debe ingresar un texto.";
+      if (value.length < 5) return "El texto debe tener al menos 5 caracteres.";
+      if (value.split(" ").length < 2)
+        return "Debe escribir una frase completa (mínimo 2 palabras).";
+      if (!/[a-zA-ZáéíóúñÁÉÍÓÚÑ]/.test(value))
+        return "Debe contener palabras con significado (no solo símbolos o números).";
     }
 
     return "";
@@ -121,14 +131,20 @@ export function MachineLearning() {
   };
 
   // ✅ Envío de formulario
-  const handleSubmit = async (e, endpoint) => {
+  const handleSubmit = async (e, endpoint, projectId) => {
     e.preventDefault();
+    setPrediction(null);
 
     const newErrors = {};
-    Object.keys(formData).forEach((key) => {
-      const error = validateField(key, formData[key]);
-      if (error) newErrors[key] = error;
-    });
+    if (projectId === 3) {
+      const error = validateField("text", formData.text);
+      if (error) newErrors.text = error;
+    } else {
+      Object.keys(formData).forEach((key) => {
+        const error = validateField(key, formData[key]);
+        if (error) newErrors[key] = error;
+      });
+    }
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -136,29 +152,39 @@ export function MachineLearning() {
     }
 
     setLoading(true);
-    setPrediction(null);
 
     try {
+      const body =
+        projectId === 3
+          ? JSON.stringify({ text: formData.text })
+          : JSON.stringify(
+              Object.fromEntries(
+                Object.entries(formData).map(([k, v]) => [k, Number(v)])
+              )
+            );
+
       const response = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(
-          Object.fromEntries(
-            Object.entries(formData).map(([k, v]) => [k, Number(v)])
-          )
-        ),
+        body,
       });
 
       const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(data.error || "Error en la predicción");
-      }
+      if (!response.ok) throw new Error(data.error || "Error en la predicción");
 
-      setPrediction({
-        probabilidad: data.probabilidad,
-        riesgo: data.riesgo,
-      });
+      // 🔹 Asignación según el tipo de modelo
+      if (projectId === 3) {
+        setPrediction({
+          sentimiento: data.sentimiento,
+          probabilidad: data.probabilidad,
+        });
+      } else {
+        setPrediction({
+          probabilidad: data.probabilidad,
+          riesgo: data.riesgo,
+        });
+      }
     } catch (error) {
       console.error("Error al conectar con el modelo:", error);
       setPrediction({ riesgo: "Error", probabilidad: 0 });
@@ -169,8 +195,11 @@ export function MachineLearning() {
 
   const allValid =
     Object.values(errors).every((e) => !e) &&
-    Object.values(formData).every((v) => v !== "");
+    Object.values(formData).some((v) => v !== "");
 
+  // ==========================
+  // Render del componente
+  // ==========================
   return (
     <section id="machine-learning" className="ml-section">
       <h2 className="ml-title">Proyectos de Machine Learning</h2>
@@ -190,46 +219,37 @@ export function MachineLearning() {
                 setActiveProject(activeProject === project.id ? null : project.id)
               }
             >
-              {activeProject === project.id ? "Cerrar" : "Probar Modelo"}
+              {activeProject === project.id ? "Cerrar" : "Probar modelo"}
             </button>
 
             {/* 🔹 Enlace al repositorio */}
-            {project.repo && (
-              <a
-                href={project.repo}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="ml-code-link"
-              >
-                <FaCode className="ml-code-icon" /> Ver código aquí
-              </a>
-            )}
+            <a
+              href={project.repo}
+              target="_blank"
+              rel="noreferrer"
+              className="ml-code-link"
+            >
+              <FaCode className="ml-code-icon" /> Ver código aquí
+            </a>
 
-            {/* 🔹 Formulario o aviso "próximamente" */}
+            {/* 🔹 Formulario dinámico */}
             {activeProject === project.id && (
               <div className="ml-form-container">
-                {project.id === 1 ? (
-                  <>
-                    <form
-                      onSubmit={(e) => handleSubmit(e, project.endpoint)}
-                      className="ml-form"
-                    >
-                      <p className="ml-intro">
-                        Completa los campos según tu estado actual para estimar el
-                        nivel de riesgo de diabetes. Los datos son confidenciales y
-                        solo se usan para demostración del modelo.
-                      </p>
+                {/* 🧠 Formulario Diabetes */}
+                {project.id === 1 && (
+                  <form
+                    onSubmit={(e) => handleSubmit(e, project.endpoint, 1)}
+                    className="ml-form"
+                  >
+                    <p className="ml-intro">
+                      Completa los campos según tu estado actual para estimar el
+                      nivel de riesgo de diabetes. Los datos son confidenciales y
+                      solo se usan para demostración del modelo.
+                    </p>
 
-                      {/* Campos numéricos */}
-                      {[
-                        "BMI",
-                        "GenHlth",
-                        "MentHlth",
-                        "PhysHlth",
-                        "Age",
-                        "Education",
-                        "Income",
-                      ].map((field) => (
+                    {/* Campos numéricos */}
+                    {["BMI", "GenHlth", "MentHlth", "PhysHlth", "Age", "Education", "Income"].map(
+                      (field) => (
                         <label key={field}>
                           {field === "BMI"
                             ? "IMC"
@@ -244,157 +264,180 @@ export function MachineLearning() {
                             : field === "Education"
                             ? "Nivel Educacional"
                             : "Nivel de Ingresos"}
-
                           <input
                             type="number"
                             name={field}
                             value={formData[field]}
                             onChange={handleChange}
-                            placeholder={
-                              field === "BMI"
-                                ? "Ej: 27.5"
-                                : field === "GenHlth"
-                                ? "Ej: 4"
-                                : "Ej: 1"
-                            }
+                            placeholder="Ej: 4"
                           />
                           <small>{ranges[field]?.text}</small>
                           {errors[field] && (
                             <p className="ml-error">{errors[field]}</p>
                           )}
                         </label>
-                      ))}
-
-                      {/* Campos binarios */}
-                      {[
-                        "HighBP",
-                        "HighChol",
-                        "CholCheck",
-                        "Smoker",
-                        "Stroke",
-                        "HeartDiseaseorAttack",
-                        "PhysActivity",
-                        "Fruits",
-                        "Veggies",
-                        "HvyAlcoholConsump",
-                        "AnyHealthcare",
-                        "NoDocbcCost",
-                        "DiffWalk",
-                        "Sex",
-                      ].map((field) => (
-                        <label key={field}>
-                          {field === "HighBP"
-                            ? "Presión Alta"
-                            : field === "HighChol"
-                            ? "Colesterol Alto"
-                            : field === "CholCheck"
-                            ? "Revisión de Colesterol"
-                            : field === "Smoker"
-                            ? "Fumador"
-                            : field === "Stroke"
-                            ? "Ha sufrido ACV"
-                            : field === "HeartDiseaseorAttack"
-                            ? "Enfermedad Cardíaca o Ataque"
-                            : field === "PhysActivity"
-                            ? "Actividad Física"
-                            : field === "Fruits"
-                            ? "Consumo de Frutas"
-                            : field === "Veggies"
-                            ? "Consumo de Verduras"
-                            : field === "HvyAlcoholConsump"
-                            ? "Consumo Alto de Alcohol"
-                            : field === "AnyHealthcare"
-                            ? "Tiene Cobertura Médica"
-                            : field === "NoDocbcCost"
-                            ? "No fue al médico por costo"
-                            : field === "DiffWalk"
-                            ? "Dificultad para Caminar"
-                            : "Sexo (0 = Femenino, 1 = Masculino)"}
-
-                          <select
-                            name={field}
-                            value={formData[field]}
-                            onChange={handleChange}
-                          >
-                            <option value="">Seleccione...</option>
-                            {field === "Sex" ? (
-                              <>
-                                <option value="0">Femenino</option>
-                                <option value="1">Masculino</option>
-                              </>
-                            ) : (
-                              <>
-                                <option value="0">No</option>
-                                <option value="1">Sí</option>
-                              </>
-                            )}
-                          </select>
-                          {errors[field] && (
-                            <p className="ml-error">{errors[field]}</p>
-                          )}
-                        </label>
-                      ))}
-
-                      <button type="submit" disabled={!allValid || loading}>
-                        {loading ? (
-                          <>
-                            <span className="ml-spinner"></span> Analizando...
-                          </>
-                        ) : (
-                          "Predecir"
-                        )}
-                      </button>
-                    </form>
-
-                    {/* Resultado */}
-                    {prediction && (
-                      <div
-                        className={`ml-result ${
-                          prediction.riesgo === "Alto"
-                            ? "positive"
-                            : prediction.riesgo === "Error"
-                            ? "error"
-                            : "negative"
-                        }`}
-                      >
-                        {prediction.riesgo === "Error" ? (
-                          <>
-                            ⚠️ Error al conectar con el servidor.
-                            <br />
-                            Intenta nuevamente en unos segundos.
-                          </>
-                        ) : (
-                          <>
-                            <strong>Resultado:</strong>{" "}
-                            {prediction.riesgo === "Alto"
-                              ? "Riesgo Alto ⚠️"
-                              : "Riesgo Bajo ✅"}
-                            <br />
-                            <strong>Probabilidad:</strong>{" "}
-                            {Math.round(prediction.probabilidad * 100)}%
-                            <div className="ml-progress">
-                              <div
-                                className="ml-progress-bar"
-                                style={{
-                                  width: `${Math.min(
-                                    prediction.probabilidad * 100,
-                                    100
-                                  )}%`,
-                                }}
-                              ></div>
-                            </div>
-                            <p className="ml-description">
-                              {prediction.riesgo === "Alto"
-                                ? "El modelo detecta un nivel alto de riesgo basado en los indicadores ingresados. Se recomienda chequeo médico preventivo."
-                                : "El modelo no detecta un riesgo significativo según los indicadores ingresados."}
-                            </p>
-                          </>
-                        )}
-                      </div>
+                      )
                     )}
-                  </>
-                ) : (
-                  <p>🚧 Este modelo estará disponible próximamente.</p>
+
+                    {/* Campos binarios */}
+                    {[
+                      "HighBP",
+                      "HighChol",
+                      "CholCheck",
+                      "Smoker",
+                      "Stroke",
+                      "HeartDiseaseorAttack",
+                      "PhysActivity",
+                      "Fruits",
+                      "Veggies",
+                      "HvyAlcoholConsump",
+                      "AnyHealthcare",
+                      "NoDocbcCost",
+                      "DiffWalk",
+                      "Sex",
+                    ].map((field) => (
+                      <label key={field}>
+                        {field === "HighBP"
+                          ? "Presión Alta"
+                          : field === "HighChol"
+                          ? "Colesterol Alto"
+                          : field === "Smoker"
+                          ? "Fumador"
+                          : field === "PhysActivity"
+                          ? "Actividad Física"
+                          : field === "Fruits"
+                          ? "Consumo de Frutas"
+                          : field === "Veggies"
+                          ? "Consumo de Verduras"
+                          : field === "HvyAlcoholConsump"
+                          ? "Consumo Alto de Alcohol"
+                          : field === "AnyHealthcare"
+                          ? "Tiene Cobertura Médica"
+                          : field === "NoDocbcCost"
+                          ? "No fue al médico por costo"
+                          : field === "DiffWalk"
+                          ? "Dificultad para Caminar"
+                          : "Sexo (0 = Femenino, 1 = Masculino)"}
+                        <select
+                          name={field}
+                          value={formData[field]}
+                          onChange={handleChange}
+                        >
+                          <option value="">Seleccione...</option>
+                          {field === "Sex" ? (
+                            <>
+                              <option value="0">Femenino</option>
+                              <option value="1">Masculino</option>
+                            </>
+                          ) : (
+                            <>
+                              <option value="0">No</option>
+                              <option value="1">Sí</option>
+                            </>
+                          )}
+                        </select>
+                        {errors[field] && (
+                          <p className="ml-error">{errors[field]}</p>
+                        )}
+                      </label>
+                    ))}
+
+                    <button type="submit" disabled={!allValid || loading}>
+                      {loading ? (
+                        <>
+                          <span className="ml-spinner"></span> Analizando...
+                        </>
+                      ) : (
+                        "Predecir"
+                      )}
+                    </button>
+                  </form>
+                )}
+
+                {/* 🗣️ Formulario Sentimientos */}
+                {project.id === 3 && (
+                  <form
+                    onSubmit={(e) => handleSubmit(e, project.endpoint, 3)}
+                    className="ml-form"
+                  >
+                    <p className="ml-intro">
+                      Escribe una opinión o comentario y el modelo detectará si el
+                      sentimiento expresado es positivo o negativo.
+                    </p>
+
+                    <label>
+                      Ingrese su texto:
+                      <textarea
+                        name="text"
+                        value={formData.text}
+                        onChange={handleChange}
+                        placeholder="Ejemplo: Me encanta cómo funciona esta aplicación"
+                        rows="4"
+                        style={{
+                          width: "100%",
+                          resize: "vertical",
+                          padding: "0.8rem",
+                          borderRadius: "8px",
+                          border: "1px solid #444",
+                          background: "#1e1e1e",
+                          color: "#fff",
+                          fontSize: "0.95rem",
+                        }}
+                      />
+                      {errors.text && <p className="ml-error">{errors.text}</p>}
+                    </label>
+
+                    <button type="submit" disabled={!formData.text || loading}>
+                      {loading ? (
+                        <>
+                          <span className="ml-spinner"></span> Analizando...
+                        </>
+                      ) : (
+                        "Analizar Sentimiento"
+                      )}
+                    </button>
+                  </form>
+                )}
+
+                {/* 🔹 Resultado dinámico */}
+                {prediction && (
+                  <div
+                    className={`ml-result ${
+                      prediction.riesgo === "Error"
+                        ? "error"
+                        : prediction.sentimiento === "positivo"
+                        ? "negative"
+                        : prediction.sentimiento === "negativo"
+                        ? "positive"
+                        : prediction.riesgo === "Alto"
+                        ? "positive"
+                        : "negative"
+                    }`}
+                  >
+                    {prediction.sentimiento ? (
+                      <>
+                        <strong>Sentimiento:</strong>{" "}
+                        {prediction.sentimiento === "positivo"
+                          ? "Positivo 😊"
+                          : "Negativo 😞"}
+                        <br />
+                        <strong>Probabilidad:</strong>{" "}
+                        {Math.round(prediction.probabilidad * 100)}%
+                      </>
+                    ) : prediction.riesgo ? (
+                      <>
+                        <strong>Resultado:</strong>{" "}
+                        {prediction.riesgo === "Alto"
+                          ? "Riesgo Alto ⚠️"
+                          : "Riesgo Bajo ✅"}
+                        <br />
+                        <strong>Probabilidad:</strong>{" "}
+                        {Math.round(prediction.probabilidad * 100)}%
+                      </>
+                    ) : (
+                      <>⚠️ Error al conectar con el modelo.</>
+                    )}
+                  </div>
                 )}
               </div>
             )}

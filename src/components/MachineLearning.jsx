@@ -26,14 +26,20 @@ export function MachineLearning() {
     Age: "",
     Education: "",
     Income: "",
-    text: "", // 🔹 campo para análisis de sentimientos
+    text: "", // Campo para análisis de sentimientos
   });
 
   const [errors, setErrors] = useState({});
-  const [prediction, setPrediction] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // 🔹 Proyectos activos
+  // 🔹 Estado independiente de predicciones
+  const [predictions, setPredictions] = useState({
+    1: null, // Diabetes
+    2: null, // Vinos
+    3: null, // Sentimientos
+  });
+
+  // 🔹 Lista de proyectos
   const projects = [
     {
       id: 1,
@@ -61,7 +67,7 @@ export function MachineLearning() {
     },
   ];
 
-  // ✅ Rangos válidos para diabetes
+  // ✅ Rango de valores para el modelo de diabetes
   const ranges = {
     BMI: { min: 10, max: 70, text: "IMC entre 10 y 70" },
     GenHlth: {
@@ -95,13 +101,13 @@ export function MachineLearning() {
       "Sex",
     ];
 
-    // 🔹 Validación binaria
+    // Validación binaria
     if (binaryFields.includes(name)) {
       if (value !== "0" && value !== "1") return "Debe seleccionar 0 (No) o 1 (Sí)";
       return "";
     }
 
-    // 🔹 Validación de rangos
+    // Validación de rangos
     if (ranges[name]) {
       if (value === "") return "Campo obligatorio.";
       if (isNaN(value)) return "Debe ingresar un número.";
@@ -109,7 +115,7 @@ export function MachineLearning() {
         return `Debe estar entre ${ranges[name].min} y ${ranges[name].max}.`;
     }
 
-    // 🔹 Validación de texto (modelo de sentimientos)
+    // Validación del texto para el modelo de sentimientos
     if (name === "text") {
       if (!value.trim()) return "Debe ingresar un texto.";
       if (value.length < 5) return "El texto debe tener al menos 5 caracteres.";
@@ -122,7 +128,7 @@ export function MachineLearning() {
     return "";
   };
 
-  // ✅ Manejo de cambios
+  // ✅ Control de cambios en el formulario
   const handleChange = (e) => {
     const { name, value } = e.target;
     const error = validateField(name, value);
@@ -133,7 +139,7 @@ export function MachineLearning() {
   // ✅ Envío de formulario
   const handleSubmit = async (e, endpoint, projectId) => {
     e.preventDefault();
-    setPrediction(null);
+    setPredictions((prev) => ({ ...prev, [projectId]: null }));
 
     const newErrors = {};
     if (projectId === 3) {
@@ -173,29 +179,29 @@ export function MachineLearning() {
 
       if (!response.ok) throw new Error(data.error || "Error en la predicción");
 
-      // 🔹 Asignación según el tipo de modelo
-      if (projectId === 3) {
-        setPrediction({
-          sentimiento: data.sentimiento,
-          probabilidad: data.probabilidad,
-        });
-      } else {
-        setPrediction({
-          probabilidad: data.probabilidad,
-          riesgo: data.riesgo,
-        });
-      }
+      setPredictions((prev) => ({
+        ...prev,
+        [projectId]:
+          projectId === 3
+            ? {
+                sentimiento: data.sentimiento,
+                probabilidad: data.probabilidad,
+              }
+            : {
+                probabilidad: data.probabilidad,
+                riesgo: data.riesgo,
+              },
+      }));
     } catch (error) {
       console.error("Error al conectar con el modelo:", error);
-      setPrediction({ riesgo: "Error", probabilidad: 0 });
+      setPredictions((prev) => ({
+        ...prev,
+        [projectId]: { riesgo: "Error", probabilidad: 0 },
+      }));
     } finally {
       setLoading(false);
     }
   };
-
-  const allValid =
-    Object.values(errors).every((e) => !e) &&
-    Object.values(formData).some((v) => v !== "");
 
   // ==========================
   // Render del componente
@@ -222,7 +228,6 @@ export function MachineLearning() {
               {activeProject === project.id ? "Cerrar" : "Probar modelo"}
             </button>
 
-            {/* 🔹 Enlace al repositorio */}
             <a
               href={project.repo}
               target="_blank"
@@ -235,7 +240,7 @@ export function MachineLearning() {
             {/* 🔹 Formulario dinámico */}
             {activeProject === project.id && (
               <div className="ml-form-container">
-                {/* 🧠 Formulario Diabetes */}
+                {/* 🩺 Modelo de Diabetes */}
                 {project.id === 1 && (
                   <form
                     onSubmit={(e) => handleSubmit(e, project.endpoint, 1)}
@@ -243,11 +248,9 @@ export function MachineLearning() {
                   >
                     <p className="ml-intro">
                       Completa los campos según tu estado actual para estimar el
-                      nivel de riesgo de diabetes. Los datos son confidenciales y
-                      solo se usan para demostración del modelo.
+                      nivel de riesgo de diabetes.
                     </p>
 
-                    {/* Campos numéricos */}
                     {["BMI", "GenHlth", "MentHlth", "PhysHlth", "Age", "Education", "Income"].map(
                       (field) => (
                         <label key={field}>
@@ -279,7 +282,6 @@ export function MachineLearning() {
                       )
                     )}
 
-                    {/* Campos binarios */}
                     {[
                       "HighBP",
                       "HighChol",
@@ -342,7 +344,7 @@ export function MachineLearning() {
                       </label>
                     ))}
 
-                    <button type="submit" disabled={!allValid || loading}>
+                    <button type="submit" disabled={loading}>
                       {loading ? (
                         <>
                           <span className="ml-spinner"></span> Analizando...
@@ -354,7 +356,16 @@ export function MachineLearning() {
                   </form>
                 )}
 
-                {/* 🗣️ Formulario Sentimientos */}
+                {/* 🍷 Modelo Vinos */}
+                {project.id === 2 && (
+                  <div className="ml-form">
+                    <p className="ml-intro">
+                      🚧 Este modelo estará disponible próximamente.
+                    </p>
+                  </div>
+                )}
+
+                {/* 💬 Modelo Sentimientos */}
                 {project.id === 3 && (
                   <form
                     onSubmit={(e) => handleSubmit(e, project.endpoint, 3)}
@@ -399,43 +410,43 @@ export function MachineLearning() {
                   </form>
                 )}
 
-                {/* 🔹 Resultado dinámico */}
-                {prediction && (
+                {/* 🔹 Resultados independientes */}
+                {predictions[project.id] && (
                   <div
                     className={`ml-result ${
-                      prediction.riesgo === "Error"
+                      predictions[project.id].riesgo === "Error"
                         ? "error"
-                        : prediction.sentimiento === "positivo"
+                        : predictions[project.id].sentimiento === "positivo"
                         ? "negative"
-                        : prediction.sentimiento === "negativo"
+                        : predictions[project.id].sentimiento === "negativo"
                         ? "positive"
-                        : prediction.riesgo === "Alto"
+                        : predictions[project.id].riesgo === "Alto"
                         ? "positive"
                         : "negative"
                     }`}
                   >
-                    {prediction.sentimiento ? (
+                    {project.id === 3 ? (
                       <>
                         <strong>Sentimiento:</strong>{" "}
-                        {prediction.sentimiento === "positivo"
+                        {predictions[3].sentimiento === "positivo"
                           ? "Positivo 😊"
                           : "Negativo 😞"}
                         <br />
                         <strong>Probabilidad:</strong>{" "}
-                        {Math.round(prediction.probabilidad * 100)}%
+                        {Math.round(predictions[3].probabilidad * 100)}%
                       </>
-                    ) : prediction.riesgo ? (
+                    ) : project.id === 1 ? (
                       <>
                         <strong>Resultado:</strong>{" "}
-                        {prediction.riesgo === "Alto"
+                        {predictions[1].riesgo === "Alto"
                           ? "Riesgo Alto ⚠️"
                           : "Riesgo Bajo ✅"}
                         <br />
                         <strong>Probabilidad:</strong>{" "}
-                        {Math.round(prediction.probabilidad * 100)}%
+                        {Math.round(predictions[1].probabilidad * 100)}%
                       </>
                     ) : (
-                      <>⚠️ Error al conectar con el modelo.</>
+                      <p>🚧 Este modelo estará disponible próximamente.</p>
                     )}
                   </div>
                 )}

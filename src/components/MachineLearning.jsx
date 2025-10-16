@@ -33,30 +33,34 @@ export function MachineLearning() {
   const [loading, setLoading] = useState(false);
   const [predictions, setPredictions] = useState({ 1: null, 2: null, 3: null });
 
+  // ✅ PROYECTOS (orden y textos actualizados)
+  // 1) Diabetes (funcional)
+  // 2) Sentimientos (funcional)
+  // 3) Reconsight (en desarrollo)
   const projects = [
     {
       id: 1,
-      title: "Predicción de Riesgo de Diabetes",
+      title: "🩺 Predicción de Riesgo de Diabetes",
       description:
-        "Modelo predictivo que estima el nivel de riesgo de diabetes según indicadores de salud.",
+        "Modelo predictivo que estima el riesgo de desarrollar diabetes tipo II a partir de indicadores clínicos y hábitos de salud. Entrenado en Google Colab y optimizado para consumo web con Flask, desplegado en Render.",
       endpoint: "https://pdiabetes-backend.onrender.com/predict",
       repo: "https://github.com/Rudeluy/pdiabetes-backend",
     },
     {
-      id: 2,
-      title: "Clasificación de Vinos",
-      description:
-        "Modelo que determina la calidad de vinos a partir de características químicas.",
-      endpoint: "#",
-      repo: "https://github.com/Rudeluy/proyecto-vinos",
-    },
-    {
       id: 3,
-      title: "Análisis de Sentimientos",
+      title: "💬 Análisis de Sentimientos",
       description:
-        "Modelo NLP que identifica emociones positivas o negativas en texto.",
+        "Modelo NLP que clasifica textos en español como positivos o negativos usando TF-IDF + Logistic Regression. Implementado como servicio Flask y desplegado en Render.",
       endpoint: "https://psentimientos-backend.onrender.com/predict",
       repo: "https://github.com/Rudeluy/psentimientos-backend",
+    },
+    {
+      id: 2,
+      title: "🧠 Reconsight (Visión por Computador)",
+      description:
+        "Proyecto experimental de visión computacional para reconocimiento y análisis de imágenes con CNN. Actualmente en desarrollo — pronto disponible como servicio web.",
+      endpoint: "#", // sin endpoint aún, solo UI y enlace a GitHub
+      repo: "https://github.com/Rudeluy/Reconsight",
     },
   ];
 
@@ -132,6 +136,15 @@ export function MachineLearning() {
       return;
     }
 
+    // Evita envío si el proyecto no tiene endpoint (Reconsight)
+    if (!endpoint || endpoint === "#") {
+      setPredictions((prev) => ({
+        ...prev,
+        [projectId]: { riesgo: "Error", probabilidad: 0 },
+      }));
+      return;
+    }
+
     setLoading(true);
     try {
       const body =
@@ -181,6 +194,7 @@ export function MachineLearning() {
           <div key={project.id} className="ml-card">
             <h3>{project.title}</h3>
             <p>{project.description}</p>
+
             <button
               className="ml-btn"
               onClick={() =>
@@ -189,6 +203,7 @@ export function MachineLearning() {
             >
               {activeProject === project.id ? "Cerrar" : "Probar modelo"}
             </button>
+
             <a href={project.repo} target="_blank" rel="noreferrer" className="ml-code-link">
               <FaCode className="ml-code-icon" /> Ver código aquí
             </a>
@@ -198,7 +213,9 @@ export function MachineLearning() {
                 {/* 🩺 Modelo de Diabetes */}
                 {project.id === 1 && (
                   <form onSubmit={(e) => handleSubmit(e, project.endpoint, 1)} className="ml-form">
-                    <p className="ml-intro">Completa los campos para estimar tu riesgo de diabetes.</p>
+                    <p className="ml-intro">
+                      Completa los campos para estimar tu riesgo de diabetes.
+                    </p>
 
                     {/* Sección 1 - Datos personales */}
                     <h4 className="ml-section-subtitle">Datos personales</h4>
@@ -318,13 +335,6 @@ export function MachineLearning() {
                   </form>
                 )}
 
-                {/* 🍷 Modelo Vinos */}
-                {project.id === 2 && (
-                  <div className="ml-form">
-                    <p className="ml-intro">🚧 Este modelo estará disponible próximamente.</p>
-                  </div>
-                )}
-
                 {/* 💬 Modelo Sentimientos */}
                 {project.id === 3 && (
                   <form onSubmit={(e) => handleSubmit(e, project.endpoint, 3)} className="ml-form">
@@ -364,6 +374,15 @@ export function MachineLearning() {
                   </form>
                 )}
 
+                {/* 🧠 Reconsight (placeholder en desarrollo) */}
+                {project.id === 2 && (
+                  <div className="ml-form">
+                    <p className="ml-intro">
+                      🚧 Este modelo estará disponible próximamente.
+                    </p>
+                  </div>
+                )}
+
                 {/* 🔹 Resultados */}
                 {predictions[project.id] && (
                   <div
@@ -384,15 +403,17 @@ export function MachineLearning() {
                         <strong>Probabilidad:</strong>{" "}
                         {Math.round(predictions[3].probabilidad * 100)}%
                       </>
-                    ) : (
+                    ) : project.id === 1 ? (
                       <>
                         <strong>Resultado:</strong>{" "}
-                        {predictions[1].riesgo === "Alto"
-                          ? "Riesgo Alto ⚠️"
-                          : "Riesgo Bajo ✅"}
+                        {predictions[1].riesgo === "Alto" ? "Riesgo Alto ⚠️" : "Riesgo Bajo ✅"}
                         <br />
                         <strong>Probabilidad:</strong>{" "}
                         {Math.round(predictions[1].probabilidad * 100)}%
+                      </>
+                    ) : (
+                      <>
+                        <strong>Estado:</strong> Aún no disponible.
                       </>
                     )}
                   </div>

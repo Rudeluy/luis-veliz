@@ -22,7 +22,7 @@ export function Hero() {
           transition={{ delay: 0.2, duration: 0.8 }}
           className="text-amber-200 text-sm md:text-base uppercase tracking-[0.3em] mb-3"
         >
-          QA Functional Engineer
+          QA Functional Engineer | Explorador de Nuevas Tecnologías
         </motion.h2>
 
         <motion.h1
@@ -40,8 +40,9 @@ export function Hero() {
           transition={{ delay: 0.6, duration: 1 }}
           className="text-gray-300 max-w-2xl mx-auto mb-10 text-lg"
         >
-          Ingeniero Informático especializado en QA funcional, validación de servicios backend y frontend,
-          con pasión por la mejora continua, automatización de pruebas y calidad de software.
+          Ingeniero Informático con sólida experiencia en QA funcional, análisis de sistemas y validación de
+          servicios backend y frontend. Enfocado en el aprendizaje continuo, la exploración de nuevas áreas
+          tecnológicas y el desarrollo de soluciones que integren calidad, innovación y eficiencia.
         </motion.p>
 
         {/* 🔹 Botones de acción */}

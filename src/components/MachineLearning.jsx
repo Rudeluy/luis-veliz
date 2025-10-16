@@ -3,7 +3,11 @@ import "./MachineLearning.css";
 import { FaCode } from "react-icons/fa";
 
 export function MachineLearning() {
+  // -----------------------------
+  // Estados generales
+  // -----------------------------
   const [activeProject, setActiveProject] = useState(null);
+  const [expandedProject, setExpandedProject] = useState(null);
   const [formData, setFormData] = useState({
     HighBP: "",
     HighChol: "",
@@ -26,23 +30,25 @@ export function MachineLearning() {
     Age: "",
     Education: "",
     Income: "",
-    text: "", // campo de sentimientos
+    text: "",
   });
-
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [predictions, setPredictions] = useState({ 1: null, 2: null, 3: null });
 
-  // ✅ PROYECTOS (orden y textos actualizados)
-  // 1) Diabetes (funcional)
-  // 2) Sentimientos (funcional)
-  // 3) Reconsight (en desarrollo)
+  // -----------------------------
+  // Datos de proyectos
+  // -----------------------------
   const projects = [
     {
       id: 1,
       title: "🩺 Predicción de Riesgo de Diabetes",
       description:
-        "Modelo predictivo que estima el riesgo de desarrollar diabetes tipo II a partir de indicadores clínicos y hábitos de salud. Entrenado en Google Colab y optimizado para consumo web con Flask, desplegado en Render.",
+        "Modelo predictivo que estima el riesgo de desarrollar diabetes tipo II a partir de indicadores clínicos y hábitos de salud.",
+      objective:
+        "El objetivo fue aplicar técnicas de Machine Learning para desarrollar un modelo funcional accesible desde la web, entrenado y desplegado en Render.",
+      reflection:
+        "Este proyecto me permitió entender todo el ciclo de vida de un modelo, desde la limpieza de datos hasta su consumo en un entorno real.",
       endpoint: "https://pdiabetes-backend.onrender.com/predict",
       repo: "https://github.com/Rudeluy/pdiabetes-backend",
     },
@@ -50,7 +56,11 @@ export function MachineLearning() {
       id: 3,
       title: "💬 Análisis de Sentimientos",
       description:
-        "Modelo NLP que clasifica textos en español como positivos o negativos usando TF-IDF + Logistic Regression. Implementado como servicio Flask y desplegado en Render.",
+        "Clasificador de textos en español que determina si un comentario es positivo o negativo utilizando TF-IDF y Logistic Regression.",
+      objective:
+        "El objetivo fue aplicar técnicas de NLP para crear un modelo de análisis de sentimientos implementado en Flask y desplegado en Render.",
+      reflection:
+        "A través de este proyecto aprendí a tratar datos textuales, optimizar modelos livianos y hacerlos interpretables para usuarios finales.",
       endpoint: "https://psentimientos-backend.onrender.com/predict",
       repo: "https://github.com/Rudeluy/psentimientos-backend",
     },
@@ -58,19 +68,22 @@ export function MachineLearning() {
       id: 2,
       title: "🧠 Reconsight (Visión por Computador)",
       description:
-        "Proyecto experimental de visión computacional para reconocimiento y análisis de imágenes con CNN. Actualmente en desarrollo — pronto disponible como servicio web.",
-      endpoint: "#", // sin endpoint aún, solo UI y enlace a GitHub
+        "Proyecto experimental que explora el uso de redes neuronales convolucionales (CNN) para reconocimiento de imágenes.",
+      objective:
+        "El objetivo es aplicar los principios del aprendizaje profundo en visión computacional, explorando cómo los modelos reconocen patrones visuales.",
+      reflection:
+        "Este trabajo permitió afianzar conceptos de preprocesamiento y arquitectura CNN, con miras a implementar soluciones prácticas más adelante.",
+      endpoint: "#",
       repo: "https://github.com/Rudeluy/Reconsight",
     },
   ];
 
+  // -----------------------------
+  // Validaciones
+  // -----------------------------
   const ranges = {
     BMI: { min: 10, max: 70, text: "IMC entre 10 y 70" },
-    GenHlth: {
-      min: 1,
-      max: 5,
-      text: "1=Muy Mala, 2=Mala, 3=Regular, 4=Buena, 5=Excelente",
-    },
+    GenHlth: { min: 1, max: 5, text: "1=Muy Mala, 2=Mala, 3=Regular, 4=Buena, 5=Excelente" },
     MentHlth: { min: 0, max: 30, text: "Días de salud mental no óptima (0–30)" },
     PhysHlth: { min: 0, max: 30, text: "Días de salud física no óptima (0–30)" },
     Age: { min: 1, max: 13, text: "Grupo de edad entre 1 y 13" },
@@ -120,6 +133,9 @@ export function MachineLearning() {
     setErrors({ ...errors, [name]: error });
   };
 
+  // -----------------------------
+  // Envío del formulario
+  // -----------------------------
   const handleSubmit = async (e, endpoint, projectId) => {
     e.preventDefault();
     setPredictions((prev) => ({ ...prev, [projectId]: null }));
@@ -136,7 +152,6 @@ export function MachineLearning() {
       return;
     }
 
-    // Evita envío si el proyecto no tiene endpoint (Reconsight)
     if (!endpoint || endpoint === "#") {
       setPredictions((prev) => ({
         ...prev,
@@ -182,12 +197,30 @@ export function MachineLearning() {
     }
   };
 
+  // -----------------------------
+  // Render principal
+  // -----------------------------
   return (
     <section id="machine-learning" className="ml-section">
+      {/* Introducción */}
+      <div className="ml-intro-block">
+        <h2>Portafolio de Machine Learning</h2>
+        <p>
+          Hola, soy <strong>Luis Véliz</strong>, Ingeniero Informático con experiencia en QA
+          funcional, automatización de pruebas, análisis de datos y desarrollo de soluciones
+          basadas en inteligencia artificial.
+        </p>
+        <p>
+          Este portafolio reúne proyectos desarrollados durante el{" "}
+          <strong>curso de Machine Learning impartido por Talento Digital y dictado por Kibernum</strong>.
+          Cada proyecto refleja parte del proceso de aprendizaje y cómo se aplican modelos en
+          entornos reales.
+        </p>
+      </div>
+
+      {/* Listado de proyectos */}
       <h2 className="ml-title">Proyectos de Machine Learning</h2>
-      <p className="ml-subtitle">
-        Explora modelos implementados en la nube e interactúa con sus predicciones.
-      </p>
+      <p className="ml-subtitle">Explora los modelos y prueba sus predicciones en tiempo real.</p>
 
       <div className="ml-cards">
         {projects.map((project) => (
@@ -195,6 +228,25 @@ export function MachineLearning() {
             <h3>{project.title}</h3>
             <p>{project.description}</p>
 
+            {/* Botón para ver más detalles */}
+            <button
+              className="ml-btn-secondary"
+              onClick={() =>
+                setExpandedProject(expandedProject === project.id ? null : project.id)
+              }
+            >
+              {expandedProject === project.id ? "Ocultar detalles" : "Ver más detalles"}
+            </button>
+
+            {/* Bloque de detalles */}
+            {expandedProject === project.id && (
+              <div className="ml-details">
+                <p><strong>Objetivo:</strong> {project.objective}</p>
+                <p><strong>Reflexión:</strong> {project.reflection}</p>
+              </div>
+            )}
+
+            {/* Acciones */}
             <button
               className="ml-btn"
               onClick={() =>
@@ -204,116 +256,73 @@ export function MachineLearning() {
               {activeProject === project.id ? "Cerrar" : "Probar modelo"}
             </button>
 
-            <a href={project.repo} target="_blank" rel="noreferrer" className="ml-code-link">
+            <a
+              href={project.repo}
+              target="_blank"
+              rel="noreferrer"
+              className="ml-code-link"
+            >
               <FaCode className="ml-code-icon" /> Ver código aquí
             </a>
 
+            {/* Formulario dinámico por proyecto */}
             {activeProject === project.id && (
               <div className="ml-form-container">
-                {/* 🩺 Modelo de Diabetes */}
+                {/* 🩺 Diabetes */}
                 {project.id === 1 && (
                   <form onSubmit={(e) => handleSubmit(e, project.endpoint, 1)} className="ml-form">
-                    <p className="ml-intro">
-                      Completa los campos para estimar tu riesgo de diabetes.
-                    </p>
+                    <p>Completa los campos para estimar tu riesgo de diabetes.</p>
 
-                    {/* Sección 1 - Datos personales */}
-                    <h4 className="ml-section-subtitle">Datos personales</h4>
+                    {/* Campos personales */}
+                    <h4>Datos personales</h4>
                     {["Age", "Sex", "Education", "Income"].map((field) => (
                       <label key={field}>
-                        {field === "Age"
-                          ? "Edad (grupo 1–13)"
-                          : field === "Sex"
-                          ? "Sexo"
-                          : field === "Education"
-                          ? "Nivel educacional"
-                          : "Nivel de ingresos"}
                         {field === "Sex" ? (
-                          <select name={field} value={formData[field]} onChange={handleChange}>
-                            <option value="">Seleccione...</option>
-                            <option value="0">Femenino</option>
-                            <option value="1">Masculino</option>
-                          </select>
+                          <>
+                            Sexo
+                            <select name={field} value={formData[field]} onChange={handleChange}>
+                              <option value="">Seleccione...</option>
+                              <option value="0">Femenino</option>
+                              <option value="1">Masculino</option>
+                            </select>
+                          </>
                         ) : (
-                          <input
-                            type="number"
-                            name={field}
-                            value={formData[field]}
-                            onChange={handleChange}
-                            placeholder="Ej: 4"
-                          />
+                          <>
+                            {field}:{" "}
+                            <input
+                              type="number"
+                              name={field}
+                              value={formData[field]}
+                              onChange={handleChange}
+                            />
+                          </>
                         )}
                         <small>{ranges[field]?.text}</small>
                         {errors[field] && <p className="ml-error">{errors[field]}</p>}
                       </label>
                     ))}
 
-                    {/* Sección 2 - Estado general */}
-                    <h4 className="ml-section-subtitle">Estado general</h4>
+                    {/* Campos físicos */}
+                    <h4>Estado general</h4>
                     {["BMI", "GenHlth", "MentHlth", "PhysHlth"].map((field) => (
                       <label key={field}>
-                        {field === "BMI"
-                          ? "IMC"
-                          : field === "GenHlth"
-                          ? "Salud general (1–5)"
-                          : field === "MentHlth"
-                          ? "Días de salud mental no óptima"
-                          : "Días de salud física no óptima"}
+                        {field}
                         <input
                           type="number"
                           name={field}
                           value={formData[field]}
                           onChange={handleChange}
-                          placeholder="Ej: 4"
                         />
                         <small>{ranges[field]?.text}</small>
                         {errors[field] && <p className="ml-error">{errors[field]}</p>}
                       </label>
                     ))}
 
-                    {/* Sección 3 - Diagnósticos y hábitos */}
-                    <h4 className="ml-section-subtitle">Diagnósticos y hábitos</h4>
-                    {[
-                      "HighBP",
-                      "HighChol",
-                      "CholCheck",
-                      "Smoker",
-                      "Stroke",
-                      "HeartDiseaseorAttack",
-                      "PhysActivity",
-                      "Fruits",
-                      "Veggies",
-                      "HvyAlcoholConsump",
-                      "AnyHealthcare",
-                      "NoDocbcCost",
-                      "DiffWalk",
-                    ].map((field) => (
+                    {/* Hábitos */}
+                    <h4>Diagnósticos y hábitos</h4>
+                    {binaryFields.map((field) => (
                       <label key={field}>
-                        {field === "HighBP"
-                          ? "Presión alta"
-                          : field === "HighChol"
-                          ? "Colesterol alto"
-                          : field === "CholCheck"
-                          ? "Revisión de colesterol reciente"
-                          : field === "Smoker"
-                          ? "Fumador"
-                          : field === "Stroke"
-                          ? "Ha sufrido ACV"
-                          : field === "HeartDiseaseorAttack"
-                          ? "Enfermedad cardíaca o ataque"
-                          : field === "PhysActivity"
-                          ? "Actividad física"
-                          : field === "Fruits"
-                          ? "Consumo de frutas"
-                          : field === "Veggies"
-                          ? "Consumo de verduras"
-                          : field === "HvyAlcoholConsump"
-                          ? "Consumo alto de alcohol"
-                          : field === "AnyHealthcare"
-                          ? "Tiene cobertura médica"
-                          : field === "NoDocbcCost"
-                          ? "No fue al médico por costo"
-                          : "Dificultad para caminar"}
+                        {field}
                         <select name={field} value={formData[field]} onChange={handleChange}>
                           <option value="">Seleccione...</option>
                           <option value="0">No</option>
@@ -324,23 +333,15 @@ export function MachineLearning() {
                     ))}
 
                     <button type="submit" disabled={loading}>
-                      {loading ? (
-                        <>
-                          <span className="ml-spinner"></span> Analizando...
-                        </>
-                      ) : (
-                        "Predecir"
-                      )}
+                      {loading ? "Analizando..." : "Predecir"}
                     </button>
                   </form>
                 )}
 
-                {/* 💬 Modelo Sentimientos */}
+                {/* 💬 Sentimientos */}
                 {project.id === 3 && (
                   <form onSubmit={(e) => handleSubmit(e, project.endpoint, 3)} className="ml-form">
-                    <p className="ml-intro">
-                      Escribe una frase o comentario y el modelo analizará el sentimiento expresado.
-                    </p>
+                    <p>Escribe una frase o comentario y analiza el sentimiento.</p>
                     <label>
                       Ingrese su texto:
                       <textarea
@@ -349,52 +350,25 @@ export function MachineLearning() {
                         onChange={handleChange}
                         placeholder="Ej: Me gusta mucho este sistema"
                         rows="4"
-                        style={{
-                          width: "100%",
-                          resize: "vertical",
-                          padding: "0.8rem",
-                          borderRadius: "8px",
-                          border: "1px solid #444",
-                          background: "#1e1e1e",
-                          color: "#fff",
-                          fontSize: "0.95rem",
-                        }}
                       />
                       {errors.text && <p className="ml-error">{errors.text}</p>}
                     </label>
-                    <button type="submit" disabled={!formData.text || loading}>
-                      {loading ? (
-                        <>
-                          <span className="ml-spinner"></span> Analizando...
-                        </>
-                      ) : (
-                        "Analizar Sentimiento"
-                      )}
+                    <button type="submit" disabled={loading}>
+                      {loading ? "Analizando..." : "Analizar Sentimiento"}
                     </button>
                   </form>
                 )}
 
-                {/* 🧠 Reconsight (placeholder en desarrollo) */}
+                {/* 🧠 Reconsight */}
                 {project.id === 2 && (
                   <div className="ml-form">
-                    <p className="ml-intro">
-                      🚧 Este modelo estará disponible próximamente.
-                    </p>
+                    <p>🚧 Este modelo estará disponible próximamente.</p>
                   </div>
                 )}
 
-                {/* 🔹 Resultados */}
+                {/* Resultados */}
                 {predictions[project.id] && (
-                  <div
-                    className={`ml-result ${
-                      predictions[project.id].riesgo === "Error"
-                        ? "error"
-                        : predictions[project.id].riesgo === "Alto" ||
-                          predictions[project.id].sentimiento === "negativo"
-                        ? "positive"
-                        : "negative"
-                    }`}
-                  >
+                  <div className="ml-result">
                     {project.id === 3 ? (
                       <>
                         <strong>Sentimiento:</strong>{" "}
@@ -412,9 +386,9 @@ export function MachineLearning() {
                         {Math.round(predictions[1].probabilidad * 100)}%
                       </>
                     ) : (
-                      <>
+                     <>
                         <strong>Estado:</strong> Aún no disponible.
-                      </>
+                    </>
                     )}
                   </div>
                 )}
@@ -422,6 +396,17 @@ export function MachineLearning() {
             )}
           </div>
         ))}
+      </div>
+
+      {/* Reflexión final */}
+      <div className="ml-reflection">
+        <h3>Reflexión final</h3>
+        <p>
+          Este portafolio refleja mi proceso de aprendizaje dentro del curso de Machine Learning.
+          Cada proyecto demuestra cómo la curiosidad y la práctica constante permiten convertir
+          la teoría en soluciones aplicables. Mantengo un enfoque ordenado, riguroso y orientado a
+          la mejora continua, buscando siempre aprender y explorar nuevas áreas de la informática.
+        </p>
       </div>
     </section>
   );

@@ -32,7 +32,7 @@
 .ml-card {
   background: #141414;
   border-radius: 12px;
-  padding: 2rem;
+  padding: 1rem;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   transition: transform 0.3s ease;
 }
@@ -396,5 +396,173 @@
 
 /* Si deseas que se vea un poco más separado del botón “Ver más” */
 .ml-card .ml-btn {
-  margin-bottom: 0.5rem; /* añade espacio entre los dos elementos */
+  margin-bottom: 0.2rem; /* añade espacio entre los dos elementos */
+}
+/* ================================
+   NUEVOS ELEMENTOS (ver más detalles)
+================================ */
+.ml-btn-secondary {
+  background: transparent;
+  border: 1px solid #00b4d8;
+  color: #00b4d8;
+  padding: 0.5rem 0.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-top: 1rem;
+  transition: all 0.3s ease;
+}
+
+.ml-btn-secondary:hover {
+  background: #00b4d8;
+  color: #fff;
+}
+
+/* Contenedor del texto que se despliega */
+.ml-details {
+  background: #1a1a1a;
+  color: #ddd;
+  margin-top: 1rem;
+  padding: 1rem 1.2rem;
+  border-left: 3px solid #00b4d8;
+  border-radius: 8px;
+  text-align: left;
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+.ml-details p {
+  margin-bottom: 0.6rem;
+  line-height: 1.5;
+}
+
+/* Bloque de introducción superior */
+.ml-intro-block {
+  text-align: left;
+  max-width: 850px;
+  margin: 0 auto 3rem auto;
+  line-height: 1.6;
+  color: #ccc;
+}
+
+/* Acciones dentro de cada tarjeta */
+.ml-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem; /* reduce espacio entre botones */
+  margin-top: 1.2rem;
+}
+
+.ml-btn,
+.ml-btn-secondary {
+  align-self: center;
+  padding: 0.6rem 1.4rem;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.ml-btn-secondary {
+  background: transparent;
+  border: 1.5px solid #00b4d8;
+  color: #00b4d8;
+}
+
+.ml-btn-secondary:hover {
+  background: #00b4d8;
+  color: #fff;
+}
+
+.ml-code-link {
+  margin-top: 0.6rem; /* más compacto */
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+
+/* Reflexión final del portafolio */
+.ml-reflection {
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 1px solid #222;
+  text-align: left;
+  max-width: 850px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.ml-reflection h3 {
+  color: #00b4d8;
+  margin-bottom: 0.8rem;
+}
+
+.ml-reflection p {
+  color: #ddd;
+  line-height: 1.6;
+}
+
+/* Animación de aparición */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+/* ================================
+   CENTRADO DEL BOTÓN PRINCIPAL
+================================ */
+.ml-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 480px; /* ajusta según el tamaño de tus descripciones */
+}
+
+.ml-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: auto;
+}
+
+/* Centra el botón dentro del cuadro */
+.ml-btn,
+.ml-btn-secondary {
+  align-self: center;
+  margin-top: 1rem;
+}
+
+/* Mantiene el “Ver código aquí” debajo del botón */
+.ml-code-link {
+  margin-top: 0.8rem;
+  text-align: center;
+}
+/* ================================
+   AJUSTE DE TEXTAREA PARA SENTIMIENTOS
+================================ */
+.ml-form textarea {
+  width: 100%;
+  min-height: 120px;
+  resize: vertical;
+  padding: 0.8rem;
+  border-radius: 8px;
+  border: 1px solid #444;
+  background-color: #1e1e1e;
+  color: #fff;
+  font-size: 0.95rem;
+  font-family: inherit;
+  transition: all 0.3s ease;
+}
+
+.ml-form textarea::placeholder {
+  color: #aaa;
+  opacity: 0.8;
+}
+
+.ml-form textarea:focus {
+  outline: none;
+  border-color: #00b4d8;
+  box-shadow: 0 0 6px rgba(0, 180, 216, 0.5);
+  background-color: #181818;
 }

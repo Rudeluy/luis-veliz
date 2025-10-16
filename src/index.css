@@ -120,3 +120,95 @@ body {
 section:last-of-type {
   padding-bottom: 10rem; /* o más si usas efectos visuales */
 }
+/* ================================
+   Ajustes responsive para About.jsx
+================================ */
+
+/* 🔹 Tablets (pantallas medianas) */
+@media (max-width: 992px) {
+  #about .grid {
+    gap: 2rem;
+  }
+
+  #about img {
+    width: 65%;
+    margin: 0 auto;
+  }
+
+  #about h2 {
+    font-size: 2.2rem;
+    text-align: center;
+  }
+
+  #about p {
+    text-align: center;
+  }
+
+  #about .bg-gray-800\/60 {
+    padding: 2rem;
+  }
+}
+
+/* 🔹 Móviles (pantallas pequeñas) */
+@media (max-width: 600px) {
+  #about {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+
+  #about .grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem;
+  }
+
+  #about img {
+    width: 80%;
+  }
+
+  #about h2 {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+  }
+
+  #about .space-y-6 {
+    padding: 1.5rem;
+  }
+
+  #about .bg-gray-800\/70 {
+    padding: 1.25rem;
+    margin: 0 1rem;
+  }
+
+  #about ul {
+    font-size: 0.9rem;
+  }
+
+  #about p.text-lg {
+    font-size: 1rem;
+  }
+
+  #about .text-sm {
+    font-size: 0.85rem;
+  }
+}
+
+/* 🔹 Ajuste visual extra para móviles */
+@media (max-width: 480px) {
+  #about .bg-gray-800\/70 {
+    border-radius: 10px;
+  }
+
+  #about .bg-gray-800\/60 {
+    border-radius: 10px;
+  }
+
+  #about .text-violet-200 {
+    text-align: center;
+  }
+
+  #about .text-sm.italic {
+    display: block;
+    text-align: center;
+    margin-top: 1.5rem;
+  }
+}

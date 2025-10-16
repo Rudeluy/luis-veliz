@@ -64,9 +64,15 @@ export function Navbar() {
     >
       <nav className="max-w-6xl mx-auto flex justify-between items-center h-20 px-6">
         {/* Logo */}
-        <h1 className="text-2xl md:text-3xl font-bold tracking-wider text-indigo-200">
-          Luis Veliz
-        </h1>
+        <a href="#home" className="flex items-center gap-3">
+          <img
+            src={`${process.env.PUBLIC_URL}/logoLV.png`}
+            alt="Logo Luis Veliz"
+            className="w-12 h-12 rounded-full border border-cyan-300 shadow-md hover:scale-105 transition-transform duration-300"
+          />
+        
+        </a>
+
 
         {/* Menú principal (desktop) */}
         <ul className="hidden md:flex gap-10 bg-black/30 px-10 py-3 rounded-2xl items-center border border-gray-700 backdrop-blur-md shadow-[0_0_15px_rgba(255,255,255,0.1)]">

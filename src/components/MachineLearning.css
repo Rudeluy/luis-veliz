@@ -566,3 +566,69 @@
   box-shadow: 0 0 6px rgba(0, 180, 216, 0.5);
   background-color: #181818;
 }
+/* ================================
+   AJUSTE DE BOTONES DENTRO DE CADA TARJETA
+================================ */
+.ml-buttons-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.8rem;
+  margin: 1rem 0;
+  flex-wrap: wrap;
+}
+
+.ml-buttons-group .ml-btn,
+.ml-buttons-group .ml-btn-secondary {
+  margin: 0; /* elimina márgenes extra */
+  padding: 0.6rem 1.4rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.ml-buttons-group .ml-btn-secondary {
+  border: 1.5px solid #00b4d8;
+  color: #00b4d8;
+  background: transparent;
+}
+
+.ml-buttons-group .ml-btn-secondary:hover {
+  background: #00b4d8;
+  color: #fff;
+}
+
+.ml-buttons-group .ml-btn {
+  background: #00b4d8;
+  border: none;
+  color: #fff;
+}
+
+.ml-buttons-group .ml-btn:hover {
+  background: #0096c7;
+  transform: scale(1.03);
+}
+/* ================================
+   CORRECCIÓN: ALTURA INDEPENDIENTE DE CADA TARJETA
+================================ */
+.ml-cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  align-items: flex-start; /* clave: permite que cada tarjeta tenga su propia altura */
+}
+
+.ml-card {
+  flex: 1 1 320px; /* ancho mínimo 320px, crece según espacio */
+  max-width: 450px;
+  height: auto; /* evita alturas uniformes */
+  align-self: flex-start;
+}
+
+/* Mejora visual en responsive */
+@media (max-width: 768px) {
+  .ml-card {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+}

@@ -100,12 +100,21 @@ export function MachineLearning() {
   // -----------------------------------------
   const ranges = {
     BMI: { min: 10, max: 70, text: "IMC entre 10 y 70" },
-    GenHlth: { min: 1, max: 5, text: "1=Muy Mala, 2=Mala, 3=Regular, 4=Buena, 5=Excelente" },
-    MentHlth: { min: 0, max: 30, text: "Días de salud mental no óptima (0–30)" },
-    PhysHlth: { min: 0, max: 30, text: "Días de salud física no óptima (0–30)" },
-    Age: { min: 1, max: 13, text: "Grupo de edad entre 1 y 13" },
-    Education: { min: 1, max: 6, text: "Nivel educacional (1–6)" },
-    Income: { min: 1, max: 8, text: "Nivel de ingresos (1–8)" },
+    GenHlth: {
+      min: 1,
+      max: 5,
+      text: "1=Muy mala, 2=Mala, 3=Regular, 4=Buena, 5=Excelente",
+    },
+    MentHlth: {
+      min: 0,
+      max: 30,
+      text: "Días de salud mental no óptima (0–30)",
+    },
+    PhysHlth: {
+      min: 0,
+      max: 30,
+      text: "Días de salud física no óptima (0–30)",
+    },
   };
 
   const binaryFields = [
@@ -122,12 +131,12 @@ export function MachineLearning() {
     "AnyHealthcare",
     "NoDocbcCost",
     "DiffWalk",
-    "Sex",
   ];
 
   const validateField = (name, value) => {
     if (binaryFields.includes(name)) {
-      if (value !== "0" && value !== "1") return "Debe seleccionar una opción válida.";
+      if (value !== "0" && value !== "1")
+        return "Debe seleccionar una opción válida.";
       return "";
     }
     if (ranges[name]) {
@@ -138,7 +147,8 @@ export function MachineLearning() {
     }
     if (name === "text") {
       if (!value.trim()) return "Debe ingresar un texto.";
-      if (value.length < 5) return "El texto debe tener al menos 5 caracteres.";
+      if (value.length < 5)
+        return "El texto debe tener al menos 5 caracteres.";
     }
     return "";
   };
@@ -159,7 +169,9 @@ export function MachineLearning() {
 
     const newErrors = {};
     const fieldsToValidate =
-      projectId === 3 ? ["text"] : Object.keys(formData).filter((f) => f !== "text");
+      projectId === 3
+        ? ["text"]
+        : Object.keys(formData).filter((f) => f !== "text");
     fieldsToValidate.forEach((key) => {
       const error = validateField(key, formData[key]);
       if (error) newErrors[key] = error;
@@ -200,7 +212,10 @@ export function MachineLearning() {
         ...prev,
         [projectId]:
           projectId === 3
-            ? { sentimiento: data.sentimiento, probabilidad: data.probabilidad }
+            ? {
+                sentimiento: data.sentimiento,
+                probabilidad: data.probabilidad,
+              }
             : { probabilidad: data.probabilidad, riesgo: data.riesgo },
       }));
     } catch (error) {
@@ -228,24 +243,26 @@ export function MachineLearning() {
   // -----------------------------------------
   return (
     <section id="machine-learning" className="ml-section">
-      {/* Intro */}
       <div className="ml-intro-block">
         <h2>Portafolio de Machine Learning</h2>
         <p>
-          Hola, soy <strong>Luis Véliz</strong>, Ingeniero Informático con experiencia en QA
-          funcional, automatización de pruebas, análisis de datos y desarrollo de soluciones
+          Hola, soy <strong>Luis Véliz</strong>, Ingeniero Informático con experiencia
+          en QA funcional, automatización de pruebas y desarrollo de soluciones
           basadas en inteligencia artificial.
         </p>
         <p>
           Este portafolio reúne proyectos desarrollados durante el{" "}
-          <strong>curso de Machine Learning impartido por Talento Digital y dictado por Kibernum</strong>.
-          Cada proyecto refleja parte del proceso de aprendizaje y cómo se aplican modelos en
-          entornos reales.
+          <strong>
+            curso de Machine Learning impartido por Talento Digital y Kibernum
+          </strong>
+          . Cada proyecto refleja cómo se aplican modelos en entornos reales.
         </p>
       </div>
 
       <h2 className="ml-title">Proyectos de Machine Learning</h2>
-      <p className="ml-subtitle">Explora los modelos y prueba sus predicciones en tiempo real.</p>
+      <p className="ml-subtitle">
+        Explora los modelos y prueba sus predicciones en tiempo real.
+      </p>
 
       <div className="ml-cards">
         {/* ======================================================
@@ -255,8 +272,14 @@ export function MachineLearning() {
           <h3>{projects[0].title}</h3>
           <p>{projects[0].description}</p>
 
-          {/* Botones centrados: detalles y probar */}
-          <div style={{ display: "flex", gap: "10px", justifyContent: "center", margin: "12px 0" }}>
+          <div
+            style={{
+              display: "flex",
+              gap: "10px",
+              justifyContent: "center",
+              margin: "12px 0",
+            }}
+          >
             <button
               className="ml-btn-secondary"
               onClick={() => toggleDetails(projects[0].key)}
@@ -271,75 +294,215 @@ export function MachineLearning() {
             </button>
           </div>
 
-          {/* Detalles */}
           {showDetails.diabetes && (
             <div className="ml-details">
-              <p><strong>Objetivo:</strong> {projects[0].objective}</p>
-              <p><strong>Reflexión:</strong> {projects[0].reflection}</p>
+              <p>
+                <strong>Objetivo:</strong> {projects[0].objective}
+              </p>
+              <p>
+                <strong>Reflexión:</strong> {projects[0].reflection}
+              </p>
             </div>
           )}
 
-          {/* Formulario */}
           {showForm.diabetes && (
             <div className="ml-form-container">
-              <form onSubmit={(e) => handleSubmit(e, projects[0].endpoint, 1)} className="ml-form">
-                <p className="ml-intro">Completa los campos para estimar tu riesgo de diabetes.</p>
+              <form
+                onSubmit={(e) => handleSubmit(e, projects[0].endpoint, 1)}
+                className="ml-form"
+              >
+                <p className="ml-intro">
+                  Completa los campos para estimar tu riesgo de diabetes.
+                </p>
 
                 <h4 className="ml-section-subtitle">Datos personales</h4>
-                {["Age", "Sex", "Education", "Income"].map((field) => (
-                  <label key={field}>
-                    {field === "Sex" ? (
-                      <>
-                        Sexo
-                        <select name={field} value={formData[field]} onChange={handleChange}>
-                          <option value="">Seleccione...</option>
-                          <option value="0">Femenino</option>
-                          <option value="1">Masculino</option>
-                        </select>
-                      </>
-                    ) : (
-                      <>
-                        {field}:
-                        <input
-                          type="number"
-                          name={field}
-                          value={formData[field]}
-                          onChange={handleChange}
-                          placeholder="Ej: 4"
-                        />
-                      </>
-                    )}
-                    <small>{ranges[field]?.text}</small>
-                    {errors[field] && <p className="ml-error">{errors[field]}</p>}
-                  </label>
-                ))}
 
+                {/* Selectores mejorados */}
+                <label>
+                  Sexo
+                  <select
+                    name="Sex"
+                    value={formData.Sex}
+                    onChange={handleChange}
+                  >
+                    <option value="">Seleccione...</option>
+                    <option value="0">Mujer</option>
+                    <option value="1">Hombre</option>
+                  </select>
+                </label>
+
+                <label>
+                  Grupo de edad
+                  <select
+                    name="Age"
+                    value={formData.Age}
+                    onChange={handleChange}
+                  >
+                    <option value="">Seleccione rango...</option>
+                    <option value="1">18–24 años</option>
+                    <option value="2">25–29 años</option>
+                    <option value="3">30–34 años</option>
+                    <option value="4">35–39 años</option>
+                    <option value="5">40–44 años</option>
+                    <option value="6">45–49 años</option>
+                    <option value="7">50–54 años</option>
+                    <option value="8">55–59 años</option>
+                    <option value="9">60–64 años</option>
+                    <option value="10">65–69 años</option>
+                    <option value="11">70–74 años</option>
+                    <option value="12">75–79 años</option>
+                    <option value="13">80 o más</option>
+                  </select>
+                </label>
+
+                <label>
+                  Nivel educacional
+                  <select
+                    name="Education"
+                    value={formData.Education}
+                    onChange={handleChange}
+                  >
+                    <option value="">Seleccione...</option>
+                    <option value="1">Sin educación formal</option>
+                    <option value="2">Primaria incompleta</option>
+                    <option value="3">Primaria completa</option>
+                    <option value="4">Secundaria completa</option>
+                    <option value="5">Educación superior</option>
+                    <option value="6">Posgrado</option>
+                  </select>
+                </label>
+
+                <label>
+                Nivel de ingresos (mensual en CLP)
+                <select
+                  name="Income"
+                  value={formData.Income}
+                  onChange={handleChange}
+                >
+                  <option value="">Seleccione...</option>
+                  <option value="1">Menos de $500.000</option>
+                  <option value="2">$500.000 – $800.000</option>
+                  <option value="3">$800.000 – $1.200.000</option>
+                  <option value="4">$1.200.000 – $1.800.000</option>
+                  <option value="5">$1.800.000 – $2.800.000</option>
+                  <option value="6">$2.800.000 – $4.000.000</option>
+                  <option value="7">$4.000.000 – $6.000.000</option>
+                  <option value="8">Más de $6.000.000</option>
+                </select>
+                <small>
+                  Rangos adaptados al contexto chileno — considerando costo de vida y acceso a salud.
+                </small>
+              </label>
+
+                {/* =========================
+                    ESTADO GENERAL
+                ========================== */}
                 <h4 className="ml-section-subtitle">Estado general</h4>
-                {["BMI", "GenHlth", "MentHlth", "PhysHlth"].map((field) => (
+
+                <label>
+                  Índice de masa corporal (IMC)
+                  <input
+                    type="number"
+                    name="BMI"
+                    value={formData.BMI}
+                    onChange={handleChange}
+                    placeholder="Ej: 25"
+                  />
+                  <small>IMC entre 10 y 70</small>
+                  {errors.BMI && <p className="ml-error">{errors.BMI}</p>}
+                </label>
+
+                <label>
+                  Salud general
+                  <select
+                    name="GenHlth"
+                    value={formData.GenHlth}
+                    onChange={handleChange}
+                  >
+                    <option value="">Seleccione...</option>
+                    <option value="1">Muy mala</option>
+                    <option value="2">Mala</option>
+                    <option value="3">Regular</option>
+                    <option value="4">Buena</option>
+                    <option value="5">Excelente</option>
+                  </select>
+                  {errors.GenHlth && (
+                    <p className="ml-error">{errors.GenHlth}</p>
+                  )}
+                </label>
+
+                <label>
+                  Días de salud mental no óptima
+                  <input
+                    type="number"
+                    name="MentHlth"
+                    value={formData.MentHlth}
+                    onChange={handleChange}
+                    placeholder="0–30"
+                  />
+                  {errors.MentHlth && (
+                    <p className="ml-error">{errors.MentHlth}</p>
+                  )}
+                </label>
+
+                <label>
+                  Días de salud física no óptima
+                  <input
+                    type="number"
+                    name="PhysHlth"
+                    value={formData.PhysHlth}
+                    onChange={handleChange}
+                    placeholder="0–30"
+                  />
+                  {errors.PhysHlth && (
+                    <p className="ml-error">{errors.PhysHlth}</p>
+                  )}
+                </label>
+
+                {/* =========================
+                    DIAGNÓSTICOS Y HÁBITOS
+                ========================== */}
+                <h4 className="ml-section-subtitle">Diagnósticos y hábitos</h4>
+
+                {binaryFields.map((field) => (
                   <label key={field}>
-                    {field}
-                    <input
-                      type="number"
+                    {field === "HighBP"
+                      ? "Presión alta"
+                      : field === "HighChol"
+                      ? "Colesterol alto"
+                      : field === "CholCheck"
+                      ? "Chequeo de colesterol reciente"
+                      : field === "Smoker"
+                      ? "Fumador"
+                      : field === "Stroke"
+                      ? "Ha sufrido un ACV"
+                      : field === "HeartDiseaseorAttack"
+                      ? "Enfermedad cardíaca o ataque al corazón"
+                      : field === "PhysActivity"
+                      ? "Actividad física regular"
+                      : field === "Fruits"
+                      ? "Consumo de frutas"
+                      : field === "Veggies"
+                      ? "Consumo de verduras"
+                      : field === "HvyAlcoholConsump"
+                      ? "Consumo alto de alcohol"
+                      : field === "AnyHealthcare"
+                      ? "Tiene cobertura médica"
+                      : field === "NoDocbcCost"
+                      ? "No fue al médico por costo"
+                      : "Dificultad para caminar"}
+                    <select
                       name={field}
                       value={formData[field]}
                       onChange={handleChange}
-                      placeholder="Ej: 4"
-                    />
-                    <small>{ranges[field]?.text}</small>
-                    {errors[field] && <p className="ml-error">{errors[field]}</p>}
-                  </label>
-                ))}
-
-                <h4 className="ml-section-subtitle">Diagnósticos y hábitos</h4>
-                {binaryFields.map((field) => (
-                  <label key={field}>
-                    {field}
-                    <select name={field} value={formData[field]} onChange={handleChange}>
+                    >
                       <option value="">Seleccione...</option>
                       <option value="0">No</option>
                       <option value="1">Sí</option>
                     </select>
-                    {errors[field] && <p className="ml-error">{errors[field]}</p>}
+                    {errors[field] && (
+                      <p className="ml-error">{errors[field]}</p>
+                    )}
                   </label>
                 ))}
 
@@ -354,11 +517,15 @@ export function MachineLearning() {
                 </button>
               </form>
 
-              {/* Resultado Diabetes */}
+              {/* =========================
+                  RESULTADOS DIABETES
+              ========================== */}
               {predictions[1] && (
                 <div className="ml-result">
                   <strong>Resultado:</strong>{" "}
-                  {predictions[1].riesgo === "Alto" ? "Riesgo Alto ⚠️" : "Riesgo Bajo ✅"}
+                  {predictions[1].riesgo === "Alto"
+                    ? "Riesgo Alto ⚠️"
+                    : "Riesgo Bajo ✅"}
                   <br />
                   <strong>Probabilidad:</strong>{" "}
                   {Math.round(predictions[1].probabilidad * 100)}%
@@ -367,7 +534,12 @@ export function MachineLearning() {
             </div>
           )}
 
-          <a href={projects[0].repo} target="_blank" rel="noreferrer" className="ml-code-link">
+          <a
+            href={projects[0].repo}
+            target="_blank"
+            rel="noreferrer"
+            className="ml-code-link"
+          >
             <FaCode className="ml-code-icon" /> Ver código aquí
           </a>
         </div>
@@ -379,7 +551,14 @@ export function MachineLearning() {
           <h3>{projects[1].title}</h3>
           <p>{projects[1].description}</p>
 
-          <div style={{ display: "flex", gap: "10px", justifyContent: "center", margin: "12px 0" }}>
+          <div
+            style={{
+              display: "flex",
+              gap: "10px",
+              justifyContent: "center",
+              margin: "12px 0",
+            }}
+          >
             <button
               className="ml-btn-secondary"
               onClick={() => toggleDetails(projects[1].key)}
@@ -396,16 +575,24 @@ export function MachineLearning() {
 
           {showDetails.sentiment && (
             <div className="ml-details">
-              <p><strong>Objetivo:</strong> {projects[1].objective}</p>
-              <p><strong>Reflexión:</strong> {projects[1].reflection}</p>
+              <p>
+                <strong>Objetivo:</strong> {projects[1].objective}
+              </p>
+              <p>
+                <strong>Reflexión:</strong> {projects[1].reflection}
+              </p>
             </div>
           )}
 
           {showForm.sentiment && (
             <div className="ml-form-container">
-              <form onSubmit={(e) => handleSubmit(e, projects[1].endpoint, 3)} className="ml-form">
+              <form
+                onSubmit={(e) => handleSubmit(e, projects[1].endpoint, 3)}
+                className="ml-form"
+              >
                 <p className="ml-intro">
-                  Escribe una frase o comentario y el modelo analizará el sentimiento expresado.
+                  Escribe una frase o comentario y el modelo analizará el
+                  sentimiento expresado.
                 </p>
                 <label>
                   Ingrese su texto:
@@ -439,11 +626,12 @@ export function MachineLearning() {
                 </button>
               </form>
 
-              {/* Resultado Sentimientos */}
               {predictions[3] && (
                 <div className="ml-result">
                   <strong>Sentimiento:</strong>{" "}
-                  {predictions[3].sentimiento === "positivo" ? "Positivo 😊" : "Negativo 😞"}
+                  {predictions[3].sentimiento === "positivo"
+                    ? "Positivo 😊"
+                    : "Negativo 😞"}
                   <br />
                   <strong>Probabilidad:</strong>{" "}
                   {Math.round(predictions[3].probabilidad * 100)}%
@@ -452,7 +640,12 @@ export function MachineLearning() {
             </div>
           )}
 
-          <a href={projects[1].repo} target="_blank" rel="noreferrer" className="ml-code-link">
+          <a
+            href={projects[1].repo}
+            target="_blank"
+            rel="noreferrer"
+            className="ml-code-link"
+          >
             <FaCode className="ml-code-icon" /> Ver código aquí
           </a>
         </div>
@@ -464,7 +657,14 @@ export function MachineLearning() {
           <h3>{projects[2].title}</h3>
           <p>{projects[2].description}</p>
 
-          <div style={{ display: "flex", gap: "10px", justifyContent: "center", margin: "12px 0" }}>
+          <div
+            style={{
+              display: "flex",
+              gap: "10px",
+              justifyContent: "center",
+              margin: "12px 0",
+            }}
+          >
             <button
               className="ml-btn-secondary"
               onClick={() => toggleDetails(projects[2].key)}
@@ -481,15 +681,21 @@ export function MachineLearning() {
 
           {showDetails.vision && (
             <div className="ml-details">
-              <p><strong>Objetivo:</strong> {projects[2].objective}</p>
-              <p><strong>Reflexión:</strong> {projects[2].reflection}</p>
+              <p>
+                <strong>Objetivo:</strong> {projects[2].objective}
+              </p>
+              <p>
+                <strong>Reflexión:</strong> {projects[2].reflection}
+              </p>
             </div>
           )}
 
           {showForm.vision && (
             <div className="ml-form-container">
               <div className="ml-form">
-                <p className="ml-intro">🚧 Este modelo estará disponible próximamente.</p>
+                <p className="ml-intro">
+                  🚧 Este modelo estará disponible próximamente.
+                </p>
               </div>
               <div className="ml-result error">
                 <strong>Estado:</strong> <span>En desarrollo.</span>
@@ -497,20 +703,29 @@ export function MachineLearning() {
             </div>
           )}
 
-          <a href={projects[2].repo} target="_blank" rel="noreferrer" className="ml-code-link">
+          <a
+            href={projects[2].repo}
+            target="_blank"
+            rel="noreferrer"
+            className="ml-code-link"
+          >
             <FaCode className="ml-code-icon" /> Ver código aquí
           </a>
         </div>
       </div>
 
-      {/* Reflexión final */}
+      {/* ======================================================
+          REFLEXIÓN FINAL
+      ====================================================== */}
       <div className="ml-reflection">
         <h3>Reflexión final</h3>
         <p>
-          Este portafolio refleja mi proceso de aprendizaje dentro del curso de Machine Learning.
-          Cada proyecto demuestra cómo la curiosidad y la práctica constante permiten convertir
-          la teoría en soluciones aplicables. Mantengo un enfoque ordenado, riguroso y orientado a
-          la mejora continua, buscando siempre aprender y explorar nuevas áreas de la informática.
+          Este portafolio refleja mi proceso de aprendizaje dentro del curso de
+          Machine Learning. Cada proyecto demuestra cómo la curiosidad y la
+          práctica constante permiten convertir la teoría en soluciones
+          aplicables. Mantengo un enfoque ordenado, riguroso y orientado a la
+          mejora continua, buscando siempre aprender y explorar nuevas áreas de
+          la informática.
         </p>
       </div>
     </section>
